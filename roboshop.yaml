@@ -12,17 +12,17 @@
   - name: create ec2 instance
     amazon.aws.ec2_instance:
       instance_type: "t3.micro"
-      security_group: "{{ sg_id }}"
+      security_group_ids: "{{ sg_id }}"
       image_id: "{{ ami_id }}"
-      name: "{{ iteam }}-{{ env }}"
-      tages:
+      name: "{{ item }}-{{ env }}"
+      tags:
         project: roboshop
-        Component: "{{ iteam }}"
+        Component: "{{ item }}"
         Environment: "{{ env }}"
-        Name: "{{ iteam }}-{{ env }}"
+        Name: "{{ item }}-{{ env }}"
     loop: "{{ instance }}"
     register: ec2_output
 
   - name: print the out put
-    ansible.bultin.debug:
+    ansible.builtin.debug:
       msg: "{{ ec2_output }}" 
