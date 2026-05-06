@@ -17,9 +17,9 @@
       name: "{{ iteam }}-{{ env }}"
       tages:
         project: roboshop
-        component: "{{ iteam }}"
-        env: "{{ env }}"
-        name: "{{ iteam }}-{{ env }}"
+        Component: "{{ iteam }}"
+        Environment: "{{ env }}"
+        Name: "{{ iteam }}-{{ env }}"
     loop: "{{ instance }}"
     register: ec2_output
 
