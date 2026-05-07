@@ -1,5 +1,5 @@
 - name: catalogue configure
-  hosts: catalogue
+  hosts: catalouge
   become: yes
 
   tasks:
