@@ -1,4 +1,4 @@
-- name: catalogue configure
+- name: catalouge configure
   hosts: catalouge
   become: yes
 
