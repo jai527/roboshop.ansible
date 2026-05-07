@@ -3,12 +3,12 @@
   become: yes
   tasks:
   - name: enabled nodejs 20
-    ansible.become.command: dnf module enalbe nodejs:20 -y
+    ansible.builtin.command: dnf module enable nodejs:20 -y
 
   - name: install nodejs
     ansible.builtin.dnf:
       name:nodejs
-      start: present
+      state: present
   
   - name: create a system user
     ansible.builtin.user:
@@ -28,7 +28,7 @@
       url: "https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip"
       dest: "/tmp/catalogue.zip"
   
-  - name: - name: Unzip archive and list files
+  - name: Unzip archive and list files
     ansible.builtin.unarchive:
       src: /tmp/catalogue.zip
       dest: /app
