@@ -1,10 +1,10 @@
 - name: create ec2 and r53 records
   hosts: all
-  connection: local
+  connection: localhost
   vars:
     sg_id:  "sg-02677d7f13c97966d"
     ami_id: "ami-0220d79f3f480ecf5"
-    domain_name: jai01.online
+    #domain_name: jai01.online
     env: dev
     instance:
     - mongodb
@@ -28,16 +28,16 @@
     ansible.builtin.debug:
       msg: "{{ ec2_output }}" 
   
-  - name: create a route 53 record
-    amazon.aws.route53:
-      state: present
-      zone: "{{ domain_name }}"
-      record: "{{ item.item}}-{{ env }}.{{ domain_name }}" # mongodb-dev.jai01.online ,frontend-dev.jai01.online
-      type: A
-      ttl: 1
-      value: "{{ item.instances[0].private_ip_address }}"
-      wait: true
-    loop: "{{ ec2_output.results }}"
+  # - name: create a route 53 record
+  #   amazon.aws.route53:
+  #     state: present
+  #     zone: "{{ domain_name }}"
+  #     record: "{{ item.item}}-{{ env }}.{{ domain_name }}" # mongodb-dev.jai01.online ,frontend-dev.jai01.online
+  #     type: A
+  #     ttl: 1
+  #     value: "{{ item.instances[0].private_ip_address }}"
+  #     wait: true
+  #   loop: "{{ ec2_output.results }}"
 
   # - name: create a route 53 record
   #   amazon.aws.route53:
