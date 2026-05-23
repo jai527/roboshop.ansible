@@ -47,7 +47,7 @@
         remote_src: yes
     
     - name: install dependencies
-      ansible.builtin.command: npm install
+      community.general.npm:
         path: /app
 
     - name: catalogue service
@@ -71,4 +71,4 @@
 
     - name: print the output
       ansible.builtin.debug:
-        msg: "{{ catalogue_output }}"
+        msg: {{ catalogue_output }}"
