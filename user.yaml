@@ -1,8 +1,13 @@
-- name: check the nodejs version available
-  ansible.builtin.command: dnf module disable nodejs -y
+- name: configure user
+  become: yes
+  host: user
 
-- name: enable the nodejs
-  ansible.builtin.command: dnf module enable nodejs:20 -y
+  tasks:
+    - name: check the nodejs version available
+      ansible.builtin.command: dnf module disable nodejs -y
 
-- name: install nodejs
-  ansible.builtin.command: dnf install nodejs -y
+    - name: enable the nodejs
+      ansible.builtin.command: dnf module enable nodejs:20 -y
+
+    - name: install nodejs
+      ansible.builtin.command: dnf install nodejs
