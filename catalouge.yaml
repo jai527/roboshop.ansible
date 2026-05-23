@@ -60,13 +60,13 @@
         src: mongo.repo
         dest: /etc/yum.repos.d/mongo.repo
 
-    - name: install mongodb clinet
+    - name: install mongodb client
       ansible.builtin.dnf:
         name: mongodb-mongosh
         state: present
 
     - name: mongodb product loaded
-      ansible.builtin.command: mongosh --host "{{Mongodb_Host}}" --quiet --eval 'db.getMongo().getDBNames().indexDF("catalogue")' 
+      ansible.builtin.command: mongosh --host "{{ Mongodb_Host }}" --quiet --eval 'db.getMongo().getDBNames().indexOf("catalogue")'
       register: catalogue_output
 
     - name: print the output
