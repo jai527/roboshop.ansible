@@ -1,3 +1,5 @@
+ansible.playbook -i inve
+
 - name: create ec2 and r53 records
   hosts: localhost
   connection: localhost
