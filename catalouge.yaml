@@ -68,7 +68,11 @@
     - name: mongodb product loaded
       ansible.builtin.command: mongosh --host "{{ Mongodb_Host }}" --quiet --eval 'db.getMongo().getDBNames().indexOf("catalogue")'
       register: catalogue_output
-
+    
     - name: print the output
       ansible.builtin.debug:
         msg: "{{ catalogue_output }}"
+
+    - name: load the products
+      ansible.builtin.shell: mongosh --host "{{ Mongodb_Host }}" </app/db/master-data.js
+      when: catalogue_output.stdout | int < 0
