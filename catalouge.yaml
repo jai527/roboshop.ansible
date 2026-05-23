@@ -52,12 +52,12 @@
 
     - name: catalogue service
       ansible.builtin.copy:
-        serc: catalogue.service
+        src: catalogue.service
         dest: /etc/systemd/system/catalogue.service
     
     - name: copy mongodb repo
       ansible.builtin.copy:
-        serc: mongo.repo
+        src: mongo.repo
         dest: /etc/yum.repos.d/mongo.repo
 
     - name: install mongodb clinet
