@@ -1,3 +1,5 @@
+## ansible-playbook -i localhost, -e '{"instances":["mongodb","catalogue","redis","user","cart",mysql","shipping","rabbitmq","payment","frontend"]}' roboshop.yaml
+
 - name: create ec2 and r53 records
   hosts: localhost
   connection: local
@@ -37,6 +39,7 @@
         ttl: 1
         value: "{{ item.instances[0].private_ip_address }}"
         wait: true
+        overwrite: true
       loop: "{{ ec2_output.results }}"
 
     - name: create public route53 record for frontend
@@ -48,5 +51,6 @@
         ttl: 1
         value: "{{ item.instances[0].public_ip_address }}"
         wait: true
+        overwrite: true
       loop: "{{ ec2_output.results }}"
       when: item.item == "frontend"
