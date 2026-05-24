@@ -2,6 +2,10 @@
   become: yes
   hosts: shipping
 
+  vars:
+    mysql_host: mysql-dev.jai01.online
+    mysql_root_password: "RoboShop@1"
+
   tasks:
 
     - name: install maven
@@ -55,26 +59,30 @@
         name: shipping
         state: started
         enabled: yes
-    
-    - name: install mysql
+
+    # ✅ FIX 1: install mysql + python dependency
+    - name: install mysql client and dependency
       ansible.builtin.dnf:
-        name: mysql
+        name:
+          - mysql
+          - python3-PyMySQL
         state: present
-    
+
+    # ✅ FIX 2: correct loop + variable usage
     - name: load the schema in database
       community.mysql.mysql_db:
         state: import
         name: all
         target: "{{ item }}"
-        login_host: "{{ Mysql_Host }}"
+        login_host: "{{ mysql_host }}"
         login_user: root
-        login_password: RoboShop@1
+        login_password: "{{ mysql_root_password }}"
       loop:
-      - /app/db/schema.sql
-      - /app/db/app-user.sql
-      - /app/db/master-data.sql 
-    
-    - name: start the service
+        - /app/db/schema.sql
+        - /app/db/app-user.sql
+        - /app/db/master-data.sql
+
+    - name: restart shipping service
       ansible.builtin.service:
         name: shipping
         state: restarted
