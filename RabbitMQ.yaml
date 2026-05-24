@@ -20,10 +20,13 @@
         state: started
         enabled: yes
 
+    - name: check existing users
+      ansible.builtin.command: rabbitmqctl list_users
+      register: users
+
     - name: add rabbitmq user
       ansible.builtin.command: rabbitmqctl add_user roboshop roboshop123
-      ignore_errors: yes
-      overwrite: yes
+      when: "'roboshop' not in users.stdout"
 
     - name: set permissions
       ansible.builtin.command: rabbitmqctl set_permissions -p / roboshop ".*" ".*" ".*"
