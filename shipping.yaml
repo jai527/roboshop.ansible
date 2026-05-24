@@ -64,8 +64,11 @@
     - name: load the schema in database
       community.mysql.mysql_db:
         state: import
-        name: mysql
-        target: /app/db/schema.sql
+        name: all
+        target: "{{ item }}"
+        login_host: "{{ Mysql_Host }}"
+        login_user: root
+        login_password: RoboShop@1
       loop:
         /app/db/schema.sql
         /app/db/app-user.sql
