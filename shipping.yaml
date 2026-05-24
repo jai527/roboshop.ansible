@@ -70,9 +70,9 @@
         login_user: root
         login_password: RoboShop@1
       loop:
-        /app/db/schema.sql
-        /app/db/app-user.sql
-        /app/db/master-data.sql 
+      - /app/db/schema.sql
+      - /app/db/app-user.sql
+      - /app/db/master-data.sql 
     
     - name: start the service
       ansible.builtin.service:
