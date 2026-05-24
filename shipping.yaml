@@ -3,7 +3,7 @@
   hosts: shipping
 
   vars:
-    mysql_host: mysql-dev.jai01.online
+    mysql_host: 172.31.12.34   # ✅ PUT YOUR MYSQL PRIVATE IP HERE
     mysql_root_password: "RoboShop@1"
 
   tasks:
@@ -40,7 +40,7 @@
         dest: /app
         remote_src: yes
 
-    - name: install dependencies (maven build)
+    - name: build application
       ansible.builtin.command: mvn clean package
       args:
         chdir: /app
@@ -60,7 +60,6 @@
         state: started
         enabled: yes
 
-    # ✅ FIX 1: install mysql + python dependency
     - name: install mysql client and dependency
       ansible.builtin.dnf:
         name:
@@ -68,7 +67,6 @@
           - python3-PyMySQL
         state: present
 
-    # ✅ FIX 2: correct loop + variable usage
     - name: load the schema in database
       community.mysql.mysql_db:
         state: import
