@@ -3,56 +3,55 @@
   hosts: shipping
 
   tasks:
-    
-    - name: install the maven
+
+    - name: install maven
       ansible.builtin.dnf:
         name: maven
         state: present
-    
-    - name: Add and create system user
+
+    - name: add system user
       ansible.builtin.user:
         name: roboshop
         shell: /sbin/nologin
         comment: "roboshop system user"
-    
-    - name: delete the any old directory
+
+    - name: delete any old app directory
       ansible.builtin.file:
         path: /app
         state: absent
 
-    - name: create the app directory
+    - name: create app directory
       ansible.builtin.file:
-      path: /app
-      state: directory
-    
-    - name: download the application
-      ansible.builtin.get_url:
-      url: https://roboshop-artifacts.s3.amazonaws.com/shipping-v3.zip
-      dest: /tmp/shipping.zip
-
-    - name: Unzip the application
-      ansible.builtin.unarchive:
-      dest: /app
-      src: /tmp/shipping.zip
-      remote_src: yes
-    
-    - name: install the dependencies
-      acommunity.general.npm:
         path: /app
-    
-    - name: copy the shipping services
+        state: directory
+
+    - name: download application
+      ansible.builtin.get_url:
+        url: https://roboshop-artifacts.s3.amazonaws.com/shipping-v3.zip
+        dest: /tmp/shipping.zip
+
+    - name: unzip application
+      ansible.builtin.unarchive:
+        src: /tmp/shipping.zip
+        dest: /app
+        remote_src: yes
+
+    - name: install dependencies (maven build)
+      ansible.builtin.command: mvn clean package
+      args:
+        chdir: /app
+
+    - name: copy shipping service
       ansible.builtin.copy:
-      src: shipping.service
-      dest: /etc/systemd/system/shipping.service
-    
+        src: shipping.service
+        dest: /etc/systemd/system/shipping.service
+
     - name: reload systemd
       ansible.builtin.systemd:
         daemon_reload: yes
 
-    - name: start user service
+    - name: start shipping service
       ansible.builtin.service:
-        name: user
+        name: shipping
         state: started
-        enabled: yes 
-
-
+        enabled: yes
