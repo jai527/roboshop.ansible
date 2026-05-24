@@ -55,3 +55,24 @@
         name: shipping
         state: started
         enabled: yes
+    
+    - name: install mysql
+      ansible.builtin.dnf:
+        name: mysql
+        state: present
+    
+    - name: load the schema in database
+      community.mysql.mysql_db:
+        state: import
+        name: mysql
+        target: /app/db/schema.sql
+      loop:
+        /app/db/schema.sql
+        /app/db/app-user.sql
+        /app/db/master-data.sql 
+    
+    - name: start the service
+      ansible.builtin.service:
+        name: shipping
+        state: restarted
+        enabled: yes
