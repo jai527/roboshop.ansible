@@ -23,6 +23,7 @@
     - name: add rabbitmq user
       ansible.builtin.command: rabbitmqctl add_user roboshop roboshop123
       ignore_errors: yes
+      overwrite: yes
 
     - name: set permissions
       ansible.builtin.command: rabbitmqctl set_permissions -p / roboshop ".*" ".*" ".*"
