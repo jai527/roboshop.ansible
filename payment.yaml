@@ -1,6 +1,6 @@
 - name: configure the payment server
   become: yes
-  hosts: payment
+  hosts: Payment
 
   tasks:
 
