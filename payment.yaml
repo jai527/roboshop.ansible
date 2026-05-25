@@ -3,23 +3,25 @@
   hosts: payment
 
   tasks:
-    - name: install paython
+
+    - name: install python and dependencies
       ansible.builtin.dnf:
         name: "{{ item }}"
         state: present
       loop:
-      - python3 
-      - gcc python3-devel
+        - python3
+        - gcc
+        - python3-devel
 
-    - name: create the system user
+    - name: create system user
       ansible.builtin.user:
         name: roboshop
         system: true
         home: /app
         shell: /sbin/nologin
         comment: "roboshop system user"
-    
-    - name: delete old directory
+
+    - name: delete old app directory
       ansible.builtin.file:
         path: /app
         state: absent
@@ -28,41 +30,41 @@
       ansible.builtin.file:
         path: /app
         state: directory
-    
-    - name: delete zip file
+
+    - name: delete old zip file
       ansible.builtin.file:
         path: /tmp/payment.zip
         state: absent
 
-    - name: download the payment application
+    - name: download payment application
       ansible.builtin.get_url:
         url: https://roboshop-artifacts.s3.amazonaws.com/payment-v3.zip
-        path: /app
         dest: /tmp/payment.zip
-    
-    - name: unizp the application
-      ansible.builtin.unarchieve:
+
+    - name: unzip application
+      ansible.builtin.unarchive:
         src: /tmp/payment.zip
         dest: /app
         remote_src: yes
-    
-    - name: install the dependencies
+
+    - name: install python dependencies
       ansible.builtin.pip:
         requirements: requirements.txt
-        executable: pip3.13 
-    
+        executable: pip3
+      args:
+        chdir: /app
+
     - name: copy payment service
       ansible.builtin.copy:
         src: payment.service
         dest: /etc/systemd/system/payment.service
-    
-    - name: daemon reload
-      ansible.builtin.service:
+
+    - name: reload systemd
+      ansible.builtin.systemd:
         daemon_reload: yes
-    
-    - name: start and reload payment
+
+    - name: start and enable payment service
       ansible.builtin.service:
         name: payment
-        start: restarted
-        enable: yes
-
+        state: restarted
+        enabled: yes
